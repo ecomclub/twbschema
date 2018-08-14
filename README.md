@@ -6,7 +6,7 @@
 Docs with Boostrap 4 for your JSON schema types.
 
 It **requires** (and does not include)
-[TWBS 4](https://getbootstrap.com/docs/4.1/getting-started/download/).
+[Boostrap](https://getbootstrap.com/docs/4.1/getting-started/download/) (twbs).
 
 Include minified script via CDN:
 
