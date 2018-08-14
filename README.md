@@ -1,6 +1,6 @@
 # twbschema
 
-[![npm version](https://img.shields.io/npm/v/ecomplus-render.svg)](https://www.npmjs.org/ecomplus-render)
+[![npm version](https://img.shields.io/npm/v/twbschema.svg)](https://www.npmjs.org/twbschema)
 [![license mit](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Docs with Boostrap 4 for your JSON schema types.
