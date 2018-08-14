@@ -40,7 +40,6 @@ window.twbschema = (function () {
           type = type[0]
         }
         var description = escapeStr(prop.description)
-        // console.log(type, description)
 
         switch (type) {
           case 'integer':
@@ -65,7 +64,7 @@ window.twbschema = (function () {
     return html
   }
 
-  var doc = function (element, schema) {
+  var doc = function (el, schema) {
     // main function
     // receives DOM element and JSON Schema
     // parse object first
@@ -87,7 +86,14 @@ window.twbschema = (function () {
     } else {
       // valid
       // convert JSON Schema to docs UI
-      element.innerHTML = gen(json)
+      var html = gen(json)
+      if (typeof el === 'object' && el !== null && el.hasOwnProperty('innerHTML')) {
+        el.innerHTML = html
+      } else {
+        // not a DOM element
+        // just return HTML string
+        return html
+      }
     }
   }
 
