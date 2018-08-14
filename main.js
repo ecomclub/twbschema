@@ -42,6 +42,12 @@ window.twbschema = (function () {
           // https://getbootstrap.com/docs/4.0/utilities/colors/
           rowBgClass = ' bg-light'
         }
+
+        // details inside collapsible divs
+        // https://getbootstrap.com/docs/4.1/components/collapse/
+        var contentButtons = ''
+        var contentCollapses = ''
+        // mark required fields
         var labelRequired = ''
         if (Array.isArray(req)) {
           for (var i = 0; i < req.length; i++) {
@@ -88,7 +94,11 @@ window.twbschema = (function () {
                     '</div>' +
                   '</div>' +
                   '<div class="col">' +
-                    '<div class="p-3">' + description + '</div>' +
+                    '<div class="p-3">' +
+                      description +
+                      contentButtons +
+                      contentCollapses +
+                    '</div>' +
                   '</div>' +
                 '</div>'
       }
