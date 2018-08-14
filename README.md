@@ -5,12 +5,12 @@
 
 Docs with Boostrap 4 for your JSON schema types.
 
+[JSFiddle sample](https://jsfiddle.net/8rzyboan/30/)
+
 Generates a responsive **list of object properties** with details,
 designed for API reference, following
 [JSON Schema Draft-06](https://json-schema.org/specification.html)
 specifications.
-
-[JSFiddle sample](https://jsfiddle.net/8rzyboan/30/)
 
 To work properly, it requires (and does not include)
 [Boostrap](https://getbootstrap.com/docs/4.1/getting-started/download/)
