@@ -136,3 +136,5 @@ window.twbschema = (function () {
     'doc': doc
   }
 }())
+
+// Sample: https://jsfiddle.net/8rzyboan/30/
