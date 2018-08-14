@@ -1,0 +1,36 @@
+{
+  "name": "twbschema",
+  "version": "0.0.1",
+  "description": "Docs with Boostrap 4 for your JSON schema types",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ecomclub/twbschema.git"
+  },
+  "keywords": [
+    "documentation",
+    "docs",
+    "JSON",
+    "JSON schema",
+    "schema",
+    "converter",
+    "Bootstrap 4",
+    "twbs"
+  ],
+  "author": "E-Com Club",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ecomclub/twbschema/issues"
+  },
+  "homepage": "https://github.com/ecomclub/twbschema#readme",
+  "standard": {
+    "globals": [
+      "XMLHttpRequest",
+      "XDomainRequest",
+      "window"
+    ]
+  }
+}
