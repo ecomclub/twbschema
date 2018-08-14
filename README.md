@@ -5,8 +5,14 @@
 
 Docs with Boostrap 4 for your JSON schema types.
 
+Generates a responsive **list of object properties** with details,
+designed for API reference, following
+[JSON Schema Draft-06](https://json-schema.org/specification.html)
+specifications.
+
 To work properly, it requires (and does not include)
-[Boostrap](https://getbootstrap.com/docs/4.1/getting-started/download/) (twbs).
+[Boostrap](https://getbootstrap.com/docs/4.1/getting-started/download/)
+(twbs).
 
 Include minified script via CDN:
 
