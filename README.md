@@ -5,7 +5,7 @@
 
 Docs with Boostrap 4 for your JSON schema types.
 
-It **requires** (and does not include)
+To work properly, it requires (and does not include)
 [Boostrap](https://getbootstrap.com/docs/4.1/getting-started/download/) (twbs).
 
 Include minified script via CDN:
