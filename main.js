@@ -38,7 +38,7 @@ window.twbschema = (function () {
     }
 
     if (err) {
-      console.error('Fatal error: invalid schema', err)
+      console.error('[twbschema fatal error (invalid schema)]', err)
     } else {
       // valid
       // convert JSON Schema to docs UI
