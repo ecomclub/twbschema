@@ -7,14 +7,59 @@
 window.twbschema = (function () {
   'use strict'
 
+  var escapeStr = function (str) {
+    // abstraction for string escaping with RegExp
+    if (typeof str === 'string') {
+      return str.replace(/(([\w-]+)?(_|\+|\*)([\w-]+)?)/g, '`$1`')
+    } else {
+      return ''
+    }
+  }
+
   var gen = function (json, html) {
     // generate docs HTML
     if (!html) {
       // preset
       html = ''
     }
+
+    // start treating schema
+    // Ref.: http://json-schema.org/specification.html
+    // array of required fields
+    var req = json.required
     // merge all object properties
-    Object.assign(json, json.properties, json.patternProperties)
+    var props = Object.assign({}, json.properties, json.patternProperties)
+
+    // check each object property
+    for (var field in props) {
+      if (props.hasOwnProperty(field)) {
+        var prop = props[field]
+        var type = prop.type
+        if (Array.isArray(type)) {
+          // use first (most important ?) type
+          type = type[0]
+        }
+        var description = escapeStr(prop.description)
+        // console.log(type, description)
+
+        switch (type) {
+          case 'integer':
+          case 'number':
+            if (prop.hasOwnProperty('minimum')) {
+              description += ' - Mininum: **' + prop.minimum + '**'
+            }
+            if (prop.hasOwnProperty('maximum')) {
+              description += ' - Maximum: **' + prop.maximum + '**'
+            }
+            if (prop.hasOwnProperty('multipleOf')) {
+              description += ' - Max precision: **' + prop.multipleOf + '**'
+            }
+            break
+        }
+
+        console.log(req, type, description)
+      }
+    }
 
     // returns rendered HTML
     return html
