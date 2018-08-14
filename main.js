@@ -95,7 +95,7 @@ window.twbschema = (function () {
                   '</div>' +
                   '<div class="col">' +
                     '<div class="p-3">' +
-                      description +
+                      '<div>' + description + '</div>' +
                       contentButtons +
                       contentCollapses +
                     '</div>' +
