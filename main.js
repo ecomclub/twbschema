@@ -95,7 +95,7 @@ window.twbschema = (function () {
           case 'string':
             setupDetails()
             for (var spec in prop) {
-              if (prop.hasOwnProperty(spec)) {
+              if (spec !== 'description' && prop.hasOwnProperty(spec)) {
                 // add spec to field details content
                 detailsContent += detailsRow(spec, prop[spec])
               }
