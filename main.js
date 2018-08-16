@@ -58,7 +58,7 @@ window.twbschema = (function () {
           }
           if (detailsButton === '') {
             // set button HTML
-            detailsButton = '<button class="btn btn-sm btn-secondary" type="button" ' +
+            detailsButton = '<button class="btn btn-sm btn-info mt-1" type="button" ' +
                             'data-toggle="collapse" data-target="#' + id + '" aria-expanded="false" ' +
                             'aria-controls="' + id + '">' + btnText + '</button>'
           }
@@ -119,7 +119,7 @@ window.twbschema = (function () {
                       '<div>' + description + '</div>' +
                       detailsButton +
                       '<div class="collapse" id="' + id + '">' +
-                        '<div class="card card-body">' + detailsContent + '</div>' +
+                        '<div class="card card-body mt-2">' + detailsContent + '</div>' +
                       '</div>' +
                     '</div>' +
                   '</div>' +
