@@ -16,11 +16,13 @@ window.twbschema = (function () {
     }
   }
 
-  var gen = function (json, html) {
+  var gen = function (json, dotNotation) {
     // generate docs HTML
-    if (!html) {
-      // preset
-      html = ''
+    // preset empty string
+    var html = ''
+    // dot notation object path
+    if (!dotNotation) {
+      dotNotation = ''
     }
 
     // start treating schema
@@ -35,6 +37,9 @@ window.twbschema = (function () {
     var rowBgClass = ''
     for (var field in props) {
       if (props.hasOwnProperty(field)) {
+        // new field ID for HTML elements
+        var id = dotNotation.replace('.', '-') + field
+
         // stripped rows
         if (rowBgClass !== '') {
           rowBgClass = ''
@@ -45,8 +50,25 @@ window.twbschema = (function () {
 
         // details inside collapsible divs
         // https://getbootstrap.com/docs/4.1/components/collapse/
-        var contentButtons = ''
-        var contentCollapses = ''
+        var detailsButton = ''
+        var detailsContent = ''
+        var setupDetails = function (btnText) {
+          if (!btnText) {
+            btnText = 'More info'
+          }
+          if (detailsButton === '') {
+            // set button HTML
+            detailsButton = '<button class="btn btn-sm btn-secondary" type="button" ' +
+                            'data-toggle="collapse" data-target="#' + id + '" aria-expanded="false" ' +
+                            'aria-controls="' + id + '">' + btnText + '</button>'
+          }
+        }
+        var detailsRow = function (name, val) {
+          // HTML for field spec rows
+          // eg.: minimum number, string max length...
+          return '<div><var class="text-muted">' + name + '</var>&nbsp;&nbsp;<samp>' + val + '</samp></div>'
+        }
+
         // mark required fields
         var labelRequired = ''
         if (Array.isArray(req)) {
@@ -70,14 +92,13 @@ window.twbschema = (function () {
         switch (type) {
           case 'integer':
           case 'number':
-            if (prop.hasOwnProperty('minimum')) {
-              description += ' - Mininum: **' + prop.minimum + '**'
-            }
-            if (prop.hasOwnProperty('maximum')) {
-              description += ' - Maximum: **' + prop.maximum + '**'
-            }
-            if (prop.hasOwnProperty('multipleOf')) {
-              description += ' - Max precision: **' + prop.multipleOf + '**'
+          case 'string':
+            setupDetails()
+            for (var spec in prop) {
+              if (prop.hasOwnProperty(spec)) {
+                // add spec to field details content
+                detailsContent += detailsRow(spec, prop[spec])
+              }
             }
             break
         }
@@ -96,8 +117,10 @@ window.twbschema = (function () {
                   '<div class="col">' +
                     '<div class="p-3">' +
                       '<div>' + description + '</div>' +
-                      contentButtons +
-                      contentCollapses +
+                      detailsButton +
+                      '<div class="collapse" id="' + id + '">' +
+                        '<div class="card card-body">' + detailsContent + '</div>' +
+                      '</div>' +
                     '</div>' +
                   '</div>' +
                 '</div>'
