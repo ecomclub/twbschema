@@ -10,14 +10,17 @@ window.twbschema = (function () {
   // regex to find object properties on text
   var propertyRegex = /([[(]?([\w-]+)?(_|\*)([\w-]+)?[\])]?)/g
 
-  var gen = function (json, parentId) {
+  var gen = function (json, parentId, dotNotation) {
     var i
     // generate docs HTML
     // preset empty string
     var html = ''
     // object path
     if (!parentId) {
-      parentId = 'root'
+      // any string
+      parentId = 'o'
+      // root
+      dotNotation = ''
     }
 
     // start treating schema
@@ -143,8 +146,9 @@ window.twbschema = (function () {
             // link to current object properties
             typeLink()
             // render current object doc reference
-            // recursive
-            objectContent = gen(prop, id)
+            // recursive call
+            // pass id and dot notation param
+            objectContent = gen(prop, id, dotNotation + field + '.')
             addSpec('Min properties', prop.minProperties)
             addSpec('Max properties', prop.maxProperties)
             break
@@ -169,7 +173,7 @@ window.twbschema = (function () {
                   '<div class="row align-items-center">' +
                     '<div class="col-sm-7">' +
                       '<div class="my-3">' +
-                        '<code>' + field + '</code>' +
+                        '<code><span class="text-secondary">' + dotNotation + '</span>' + field + '</code>' +
                         '<code class="text-muted small"><br>' + type + labelRequired + '</code>' +
                         '<div class="small">' + description + '</div>' +
                       '</div>' +
