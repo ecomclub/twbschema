@@ -7,6 +7,9 @@
 window.twbschema = (function () {
   'use strict'
 
+  // regex to find object properties on text
+  var propertyRegex = /([[(]?([\w-]+)?(_|\*)([\w-]+)?[\])]?)/g
+
   var gen = function (json, dotNotation) {
     var i
     // generate docs HTML
@@ -82,8 +85,7 @@ window.twbschema = (function () {
         var description
         if (prop.description) {
           // mark other refered fields on description
-          var regex = /([[(]?([\w-]+)?(_|\*)([\w-]+)?[\])]?)/g
-          description = prop.description.replace(regex, '<samp class="text-info">$1</samp>')
+          description = prop.description.replace(propertyRegex, '<samp class="text-info">$1</samp>')
         } else {
           description = ''
         }
@@ -134,6 +136,7 @@ window.twbschema = (function () {
         switch (type) {
           case 'integer':
           case 'number':
+            break
           case 'string':
             setupDetails()
             for (var spec in prop) {
