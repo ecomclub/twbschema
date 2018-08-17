@@ -161,14 +161,14 @@ window.twbschema = (function () {
         if (specsList !== '') {
           // has specification(s)
           // setup ul element HTML
-          specsList = '<ul class="small list-unstyled py-3">' + specsList + '</ul>'
+          specsList = '<ul class="small list-unstyled mt-sm-3 mb-3">' + specsList + '</ul>'
         }
 
         // render row HTML
         html += '<div class="border-bottom px-3' + rowBgClass + '">' +
                   '<div class="row align-items-center">' +
                     '<div class="col-sm-7">' +
-                      '<div class="py-3">' +
+                      '<div class="my-3">' +
                         '<code>' + field + '</code>' +
                         '<code class="text-muted small"><br>' + type + labelRequired + '</code>' +
                         '<div class="small">' + description + '</div>' +
