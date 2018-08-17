@@ -136,7 +136,7 @@ window.twbschema = (function () {
             addSpec('Min length', prop.minLength)
             addSpec('Max length', prop.maxLength)
             addSpec('Format', prop.format)
-            addSpec('RegEx pattern', prop.pattern)
+            addSpec('RegEx', prop.pattern)
             break
 
           case 'object':
