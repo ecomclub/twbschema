@@ -30,6 +30,8 @@ window.twbschema = (function () {
     // check each object property
     // one property per row
     var rowBgClass = ''
+    // first row without border
+    var rowBorderClass = ''
     for (var field in props) {
       if (props.hasOwnProperty(field)) {
         // new field ID for HTML elements
@@ -163,7 +165,7 @@ window.twbschema = (function () {
         }
 
         // render row HTML
-        html += '<div class="border-bottom px-3' + rowBgClass + '">' +
+        html += '<div class="px-3' + rowBorderClass + rowBgClass + '">' +
                   '<div class="row align-items-center">' +
                     '<div class="col-sm-7">' +
                       '<div class="my-3">' +
@@ -188,6 +190,10 @@ window.twbschema = (function () {
         } else {
           // https://getbootstrap.com/docs/4.0/utilities/colors/
           rowBgClass = ' bg-light'
+        }
+        // only first row has no border
+        if (rowBorderClass === '') {
+          rowBorderClass = ' border-top'
         }
       }
     }
