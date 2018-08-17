@@ -9,17 +9,21 @@ window.twbschema = (function () {
 
   // regex to find object properties on text
   var propertyRegex = /([[(]?([\w-]+)?(_|\*)([\w-]+)?[\])]?)/g
+  // count rows to create IDs
+  var counter = 0
+  // control row colors
+  var rowBgClass = ''
 
-  var gen = function (json, parentId, dotNotation) {
+  var gen = function (json, dotNotation) {
     var i
     // generate docs HTML
     // preset empty string
     var html = ''
+    // if root object
+    var root
     // object path
-    if (!parentId) {
-      // any string
-      parentId = 'o'
-      // root
+    if (!dotNotation) {
+      root = true
       dotNotation = ''
     }
 
@@ -31,14 +35,13 @@ window.twbschema = (function () {
     var props = Object.assign({}, json.properties, json.patternProperties)
 
     // check each object property
-    // one property per row
-    var rowBgClass = ''
     // first row without border
     var rowBorderClass = ''
     for (var field in props) {
       if (props.hasOwnProperty(field)) {
         // new field ID for HTML elements
-        var id = parentId + '-' + field
+        var id = 'schema-field-' + counter
+        counter++
 
         // mark required fields
         var labelRequired = ''
@@ -147,8 +150,8 @@ window.twbschema = (function () {
             typeLink()
             // render current object doc reference
             // recursive call
-            // pass id and dot notation param
-            objectContent = gen(prop, id, dotNotation + field + '.')
+            // pass dot notation param
+            objectContent = gen(prop, dotNotation + field + '.')
             addSpec('Min properties', prop.minProperties)
             addSpec('Max properties', prop.maxProperties)
             break
@@ -165,14 +168,14 @@ window.twbschema = (function () {
         if (specsList !== '') {
           // has specification(s)
           // setup ul element HTML
-          specsList = '<ul class="small list-unstyled mt-sm-3 mb-3">' + specsList + '</ul>'
+          specsList = '<ul class="small list-unstyled mt-3 mb-0">' + specsList + '</ul>'
         }
 
         // render row HTML
-        html += '<div class="px-3' + rowBorderClass + rowBgClass + '">' +
+        html += '<div class="px-3 pb-3' + rowBorderClass + rowBgClass + '">' +
                   '<div class="row align-items-center">' +
                     '<div class="col-sm-7">' +
-                      '<div class="my-3">' +
+                      '<div class="mt-3">' +
                         '<code><span class="text-secondary">' + dotNotation + '</span>' + field + '</code>' +
                         '<code class="text-muted small"><br>' + type + labelRequired + '</code>' +
                         '<div class="small">' + description + '</div>' +
@@ -182,18 +185,20 @@ window.twbschema = (function () {
                       specsList +
                     '</div>' +
                   '</div>' +
-                  '<div class="collapse" id="' + id + '">' +
-                    '<div class="card card-body mb-3 p-1">' + objectContent + '</div>' +
-                  '</div>' +
+                '</div>' +
+                '<div class="collapse border-top" id="' + id + '">' +
+                  objectContent +
                 '</div>'
 
-        // stripped rows
-        // next row class
-        if (rowBgClass !== '') {
-          rowBgClass = ''
-        } else {
-          // https://getbootstrap.com/docs/4.0/utilities/colors/
-          rowBgClass = ' bg-light'
+        if (root) {
+          // stripped rows on root level
+          // next row class
+          if (rowBgClass !== '') {
+            rowBgClass = ''
+          } else {
+            // https://getbootstrap.com/docs/4.0/utilities/colors/
+            rowBgClass = ' bg-light'
+          }
         }
         // only first row has no border
         if (rowBorderClass === '') {
