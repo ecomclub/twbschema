@@ -95,41 +95,47 @@ window.twbschema = (function () {
           description = ''
         }
 
-        // render optional field sample values
-        var values, value
-        var valueSample = function (label, content) {
-          // abstraction for sample values HTML
-          return '<div><span class="text-muted">' + label + ': </span>' + content + '</div>'
+        // render optional list of field specifications
+        var specsList = ''
+        var addSpec = function (name, val) {
+          // HTML for field spec rows
+          // eg.: minimum number, string max length...
+          // samp tag HTML
+          var samp
+          if (Array.isArray(val) && typeof val[0] !== 'object') {
+            // array of strings or numbers
+            samp = ''
+            for (var i = 0; i < val.length; i++) {
+              if (i > 0) {
+                // not first value
+                samp += '<span class="text-muted mx-1"> · </span>'
+              }
+              samp += '<samp>' + val[i] + '</samp>'
+            }
+          } else {
+            switch (typeof val) {
+              case 'string':
+              case 'number':
+                samp = val
+                break
+              default:
+                // object, boolean or null
+                samp = JSON.stringify(val)
+            }
+            // single value
+            samp = '<samp>' + samp + '</samp>'
+          }
+          // add li element to specs list
+          specsList += '<li><span class="text-muted mr-1">' + name + ': </span>' + samp + '</li>'
         }
 
         if (prop.hasOwnProperty('default')) {
-          value = prop.default
-          switch (typeof value) {
-            case 'string':
-            case 'number':
-              break
-            default:
-              // boolean
-              value = JSON.stringify(value)
-          }
           // mark default value
-          values = valueSample('Default', '<samp>' + value + '</samp>')
-        } else {
-          // no default field value
-          values = ''
+          addSpec('Default', prop.default)
         }
-
         if (prop.enum) {
           // array of possible values
-          var valuesList = ''
-          for (i = 0; i < prop.enum.length; i++) {
-            if (i > 0) {
-              // not first value
-              valuesList += '<span class="text-muted"> · </span>'
-            }
-            valuesList += '<samp>' + prop.enum[i] + '</samp>'
-          }
-          values += valueSample('Possible values', valuesList)
+          addSpec('Possible values', prop.enum)
         }
 
         switch (type) {
@@ -152,21 +158,24 @@ window.twbschema = (function () {
             break
         }
 
+        if (specsList !== '') {
+          // has specification(s)
+          // setup ul element HTML
+          specsList = '<ul class="small list-unstyled py-3">' + specsList + '</ul>'
+        }
+
         // render row HTML
         html += '<div class="border-bottom px-3' + rowBgClass + '">' +
                   '<div class="row align-items-center">' +
-                    '<div class="col-sm-5 col-md-4 col-lg-3">' +
+                    '<div class="col-sm-7">' +
                       '<div class="py-3">' +
                         '<code>' + field + '</code>' +
                         '<code class="text-muted small"><br>' + type + labelRequired + '</code>' +
+                        '<div class="small">' + description + '</div>' +
                       '</div>' +
                     '</div>' +
                     '<div class="col">' +
-                      '<div class="py-3">' +
-                        '<div>' + description + '</div>' +
-                        values +
-                        detailsButton +
-                      '</div>' +
+                      specsList +
                     '</div>' +
                   '</div>' +
                   '<div class="collapse" id="' + id + '">' +
