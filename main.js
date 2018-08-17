@@ -17,6 +17,7 @@ window.twbschema = (function () {
   }
 
   var gen = function (json, dotNotation) {
+    var i
     // generate docs HTML
     // preset empty string
     var html = ''
@@ -58,7 +59,7 @@ window.twbschema = (function () {
           }
           if (detailsButton === '') {
             // set button HTML
-            detailsButton = '<button class="btn btn-sm btn-info mt-1" type="button" ' +
+            detailsButton = '<button class="btn btn-sm btn-info mt-2" type="button" ' +
                             'data-toggle="collapse" data-target="#' + id + '" aria-expanded="false" ' +
                             'aria-controls="' + id + '">' + btnText + '</button>'
           }
@@ -72,10 +73,10 @@ window.twbschema = (function () {
         // mark required fields
         var labelRequired = ''
         if (Array.isArray(req)) {
-          for (var i = 0; i < req.length; i++) {
+          for (i = 0; i < req.length; i++) {
             if (field === req[i]) {
               // field is requred
-              labelRequired = '<div class="text-danger">* required</div>'
+              labelRequired = '<span class="text-danger ml-2">required</span>'
               break
             }
           }
@@ -87,7 +88,49 @@ window.twbschema = (function () {
           // use first (most important ?) type
           type = type[0]
         }
-        var description = escapeStr(prop.description)
+        var description
+        if (prop.description) {
+          description = escapeStr(prop.description)
+        } else {
+          description = ''
+        }
+
+        // render optional field sample values
+        var values, value
+        var valueSample = function (label, content) {
+          // abstraction for sample values HTML
+          return '<div><span class="text-muted">' + label + ': </span>' + content + '</div>'
+        }
+
+        if (prop.hasOwnProperty('default')) {
+          value = prop.default
+          switch (typeof value) {
+            case 'string':
+            case 'number':
+              break
+            default:
+              // boolean
+              value = JSON.stringify(value)
+          }
+          // mark default value
+          values = valueSample('Default', '<samp>' + value + '</samp>')
+        } else {
+          // no default field value
+          values = ''
+        }
+
+        if (prop.enum) {
+          // array of possible values
+          var valuesList = ''
+          for (i = 0; i < prop.enum.length; i++) {
+            if (i > 0) {
+              // not first value
+              valuesList += '<span class="text-muted"> · </span>'
+            }
+            valuesList += '<samp>' + prop.enum[i] + '</samp>'
+          }
+          values += valueSample('Possible values', valuesList)
+        }
 
         switch (type) {
           case 'integer':
@@ -95,33 +138,39 @@ window.twbschema = (function () {
           case 'string':
             setupDetails()
             for (var spec in prop) {
-              if (spec !== 'description' && prop.hasOwnProperty(spec)) {
-                // add spec to field details content
-                detailsContent += detailsRow(spec, prop[spec])
+              switch (typeof prop[spec]) {
+                case 'string':
+                case 'number':
+                  // skip description
+                  if (spec !== 'description') {
+                    // add spec to field details content
+                    detailsContent += detailsRow(spec, prop[spec])
+                  }
+                  break
               }
             }
             break
         }
 
         // render row HTML
-        html += '<div class="row align-items-center border-bottom' + rowBgClass + '">' +
-                  '<div class="col-xs-12 col-4">' +
-                    '<div class="p-3">' +
-                      '<code>' + field + '</code>' +
-                      '<div class="small">' +
-                        '<span class="text-muted">' + type + '</span>' +
-                        labelRequired +
+        html += '<div class="border-bottom px-3' + rowBgClass + '">' +
+                  '<div class="row align-items-center">' +
+                    '<div class="col-sm-5 col-md-4 col-lg-3">' +
+                      '<div class="py-3">' +
+                        '<code>' + field + '</code>' +
+                        '<code class="text-muted small"><br>' + type + labelRequired + '</code>' +
+                      '</div>' +
+                    '</div>' +
+                    '<div class="col">' +
+                      '<div class="py-3">' +
+                        '<div>' + description + '</div>' +
+                        values +
+                        detailsButton +
                       '</div>' +
                     '</div>' +
                   '</div>' +
-                  '<div class="col">' +
-                    '<div class="p-3">' +
-                      '<div>' + description + '</div>' +
-                      detailsButton +
-                      '<div class="collapse" id="' + id + '">' +
-                        '<div class="card card-body mt-2">' + detailsContent + '</div>' +
-                      '</div>' +
-                    '</div>' +
+                  '<div class="collapse" id="' + id + '">' +
+                    '<div class="card card-body mb-3 py-2 px-3">' + detailsContent + '</div>' +
                   '</div>' +
                 '</div>'
       }
