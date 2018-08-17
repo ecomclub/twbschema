@@ -10,14 +10,14 @@ window.twbschema = (function () {
   // regex to find object properties on text
   var propertyRegex = /([[(]?([\w-]+)?(_|\*)([\w-]+)?[\])]?)/g
 
-  var gen = function (json, dotNotation) {
+  var gen = function (json, parentId) {
     var i
     // generate docs HTML
     // preset empty string
     var html = ''
-    // dot notation object path
-    if (!dotNotation) {
-      dotNotation = ''
+    // object path
+    if (!parentId) {
+      parentId = 'root'
     }
 
     // start treating schema
@@ -33,15 +33,7 @@ window.twbschema = (function () {
     for (var field in props) {
       if (props.hasOwnProperty(field)) {
         // new field ID for HTML elements
-        // var id = dotNotation.replace('.', '-') + field
-
-        // stripped rows
-        if (rowBgClass !== '') {
-          rowBgClass = ''
-        } else {
-          // https://getbootstrap.com/docs/4.0/utilities/colors/
-          rowBgClass = ' bg-light'
-        }
+        var id = parentId + '-' + field
 
         // mark required fields
         var labelRequired = ''
@@ -119,6 +111,16 @@ window.twbschema = (function () {
           addSpec('Possible values', prop.enum)
         }
 
+        // details inside collapsible div
+        // https://getbootstrap.com/docs/4.1/components/collapse/
+        var objectContent = ''
+        var typeLink = function () {
+          // parse type string to HTML link
+          // open collapse div
+          type = '<a class="dropdown-toggle" data-toggle="collapse" href="#' + id + '" ' +
+                 'aria-expanded="false" aria-controls="' + id + '">' + type + '</a>'
+        }
+
         // try to handle specs for each field type
         switch (type) {
           case 'integer':
@@ -127,19 +129,30 @@ window.twbschema = (function () {
             addSpec('Maximum', prop.maximum)
             addSpec('Max precision', prop.multipleOf)
             break
+
           case 'string':
             addSpec('Min length', prop.minLength)
             addSpec('Max length', prop.maxLength)
             addSpec('Format', prop.format)
             addSpec('RegEx pattern', prop.pattern)
             break
-          case 'array':
-            addSpec('Min elements', prop.minItems)
-            addSpec('Max elements', prop.maxItems)
-            break
+
           case 'object':
+            // link to current object properties
+            typeLink()
+            // render current object doc reference
+            // recursive
+            objectContent = gen(prop, id)
             addSpec('Min properties', prop.minProperties)
             addSpec('Max properties', prop.maxProperties)
+            break
+
+          case 'array':
+            // also shows array element type
+            type = type + '[' + prop.items.type + ']'
+            typeLink()
+            addSpec('Min elements', prop.minItems)
+            addSpec('Max elements', prop.maxItems)
             break
         }
 
@@ -163,7 +176,19 @@ window.twbschema = (function () {
                       specsList +
                     '</div>' +
                   '</div>' +
+                  '<div class="collapse" id="' + id + '">' +
+                    '<div class="card card-body mb-3 p-1">' + objectContent + '</div>' +
+                  '</div>' +
                 '</div>'
+
+        // stripped rows
+        // next row class
+        if (rowBgClass !== '') {
+          rowBgClass = ''
+        } else {
+          // https://getbootstrap.com/docs/4.0/utilities/colors/
+          rowBgClass = ' bg-light'
+        }
       }
     }
 
