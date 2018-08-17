@@ -191,7 +191,7 @@ window.twbschema = (function () {
                   '<div class="pb-3 px-3' + rowBgClass + '">' +
                     '<a class="small" data-toggle="collapse" href="#' + id + '" ' +
                     'aria-expanded="false" aria-controls="' + id + '">' +
-                      'Close <samp><var>' + dotNotation + '.' + field + '*</var></samp>' +
+                      'Close<samp> ' + dotNotation + field + '.*</samp>' +
                     '</a>' +
                   '</div>' +
                 '</div>'
