@@ -188,6 +188,12 @@ window.twbschema = (function () {
                 '</div>' +
                 '<div class="collapse border-top" id="' + id + '">' +
                   objectContent +
+                  '<div class="pb-3 px-3' + rowBgClass + '">' +
+                    '<a class="small" data-toggle="collapse" href="#' + id + '" ' +
+                    'aria-expanded="false" aria-controls="' + id + '">' +
+                      'Close <samp><var>' + dotNotation + '.' + field + '*</var></samp>' +
+                    '</a>' +
+                  '</div>' +
                 '</div>'
 
         if (root) {
