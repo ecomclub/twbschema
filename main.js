@@ -7,15 +7,6 @@
 window.twbschema = (function () {
   'use strict'
 
-  var escapeStr = function (str) {
-    // abstraction for string escaping with RegExp
-    if (typeof str === 'string') {
-      return str.replace(/(([\w-]+)?(_|\+|\*)([\w-]+)?)/g, '`$1`')
-    } else {
-      return ''
-    }
-  }
-
   var gen = function (json, dotNotation) {
     var i
     // generate docs HTML
@@ -90,7 +81,9 @@ window.twbschema = (function () {
         }
         var description
         if (prop.description) {
-          description = escapeStr(prop.description)
+          // mark other refered fields on description
+          var regex = /([[(]?([\w-]+)?(_|\*)([\w-]+)?[\])]?)/g
+          description = prop.description.replace(regex, '<samp class="text-info">$1</samp>')
         } else {
           description = ''
         }
