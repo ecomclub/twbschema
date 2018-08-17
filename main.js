@@ -33,7 +33,7 @@ window.twbschema = (function () {
     for (var field in props) {
       if (props.hasOwnProperty(field)) {
         // new field ID for HTML elements
-        var id = dotNotation.replace('.', '-') + field
+        // var id = dotNotation.replace('.', '-') + field
 
         // stripped rows
         if (rowBgClass !== '') {
@@ -41,27 +41,6 @@ window.twbschema = (function () {
         } else {
           // https://getbootstrap.com/docs/4.0/utilities/colors/
           rowBgClass = ' bg-light'
-        }
-
-        // details inside collapsible divs
-        // https://getbootstrap.com/docs/4.1/components/collapse/
-        var detailsButton = ''
-        var detailsContent = ''
-        var setupDetails = function (btnText) {
-          if (!btnText) {
-            btnText = 'More info'
-          }
-          if (detailsButton === '') {
-            // set button HTML
-            detailsButton = '<button class="btn btn-sm btn-info mt-2" type="button" ' +
-                            'data-toggle="collapse" data-target="#' + id + '" aria-expanded="false" ' +
-                            'aria-controls="' + id + '">' + btnText + '</button>'
-          }
-        }
-        var detailsRow = function (name, val) {
-          // HTML for field spec rows
-          // eg.: minimum number, string max length...
-          return '<div><var class="text-muted">' + name + '</var>&nbsp;&nbsp;<samp>' + val + '</samp></div>'
         }
 
         // mark required fields
@@ -93,7 +72,12 @@ window.twbschema = (function () {
         // render optional list of field specifications
         var specsList = ''
         var addSpec = function (name, val) {
-          // HTML for field spec rows
+          // populate specs list
+          if (val === undefined) {
+            // specification value is required
+            return
+          }
+
           // eg.: minimum number, string max length...
           // samp tag HTML
           var samp
@@ -120,6 +104,8 @@ window.twbschema = (function () {
             // single value
             samp = '<samp>' + samp + '</samp>'
           }
+
+          // HTML for field spec rows
           // add li element to specs list
           specsList += '<li><span class="text-muted mr-1">' + name + ': </span>' + samp + '</li>'
         }
@@ -133,24 +119,27 @@ window.twbschema = (function () {
           addSpec('Possible values', prop.enum)
         }
 
+        // try to handle specs for each field type
         switch (type) {
           case 'integer':
           case 'number':
+            addSpec('Minimun', prop.minimum)
+            addSpec('Maximum', prop.maximum)
+            addSpec('Max precision', prop.multipleOf)
             break
           case 'string':
-            setupDetails()
-            for (var spec in prop) {
-              switch (typeof prop[spec]) {
-                case 'string':
-                case 'number':
-                  // skip description
-                  if (spec !== 'description') {
-                    // add spec to field details content
-                    detailsContent += detailsRow(spec, prop[spec])
-                  }
-                  break
-              }
-            }
+            addSpec('Min length', prop.minLength)
+            addSpec('Max length', prop.maxLength)
+            addSpec('Format', prop.format)
+            addSpec('RegEx pattern', prop.pattern)
+            break
+          case 'array':
+            addSpec('Min elements', prop.minItems)
+            addSpec('Max elements', prop.maxItems)
+            break
+          case 'object':
+            addSpec('Min properties', prop.minProperties)
+            addSpec('Max properties', prop.maxProperties)
             break
         }
 
@@ -173,9 +162,6 @@ window.twbschema = (function () {
                     '<div class="col">' +
                       specsList +
                     '</div>' +
-                  '</div>' +
-                  '<div class="collapse" id="' + id + '">' +
-                    '<div class="card card-body mb-3 py-2 px-3">' + detailsContent + '</div>' +
                   '</div>' +
                 '</div>'
       }
