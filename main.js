@@ -114,11 +114,11 @@ window.twbschema = (function () {
 
         if (prop.hasOwnProperty('default')) {
           // mark default value
-          addSpec('Default', prop.default)
+          addSpec('Default', prop['default'])
         }
-        if (prop.enum) {
+        if (prop['enum']) {
           // array of possible values
-          addSpec('Possible values', prop.enum)
+          addSpec('Possible values', prop['enum'])
         }
 
         // details inside collapsible div
