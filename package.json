@@ -1,6 +1,6 @@
 {
   "name": "twbschema",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Docs with Boostrap 4 for your JSON schema types",
   "main": "main.js",
   "scripts": {
