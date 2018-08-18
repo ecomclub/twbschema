@@ -5,7 +5,7 @@
 
 Docs with Boostrap 4 for your JSON schema types.
 
-[JSFiddle sample](https://jsfiddle.net/8rzyboan/30/)
+[JSFiddle sample](https://jsfiddle.net/8rzyboan/117/)
 
 Generates a responsive **list of object properties** with details,
 designed for API reference, following
