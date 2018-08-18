@@ -39,6 +39,8 @@ window.twbschema = (function () {
     var rowBorderClass = ''
     for (var field in props) {
       if (props.hasOwnProperty(field)) {
+        // path for nested objects if any
+        var childDotNotation = dotNotation + field
         // new field ID for HTML elements
         var id = 'schema-field-' + counter
         counter++
@@ -151,7 +153,8 @@ window.twbschema = (function () {
             // render current object doc reference
             // recursive call
             // pass dot notation param
-            objectContent = gen(prop, dotNotation + field + '.')
+            childDotNotation += '.'
+            objectContent = gen(prop, childDotNotation)
             addSpec('Min properties', prop.minProperties)
             addSpec('Max properties', prop.maxProperties)
             break
@@ -160,6 +163,15 @@ window.twbschema = (function () {
             // also shows array element type
             type = type + '[' + prop.items.type + ']'
             typeLink()
+            switch (prop.items.type) {
+              case 'object':
+                // array of nested objects
+                // recursive call
+                // pass dot notation param with [] indicating array
+                childDotNotation += '[].'
+                objectContent = gen(prop.items, childDotNotation)
+                break
+            }
             addSpec('Min elements', prop.minItems)
             addSpec('Max elements', prop.maxItems)
             break
@@ -191,7 +203,7 @@ window.twbschema = (function () {
                   '<div class="pb-3 px-3' + rowBgClass + '">' +
                     '<a class="small" data-toggle="collapse" href="#' + id + '" ' +
                     'aria-expanded="false" aria-controls="' + id + '">' +
-                      'Close<samp> ' + dotNotation + field + '.*</samp>' +
+                      'Close<samp> ' + childDotNotation + '*</samp>' +
                     '</a>' +
                   '</div>' +
                 '</div>'
