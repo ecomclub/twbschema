@@ -163,14 +163,22 @@ window.twbschema = (function () {
             // also shows array element type
             type = type + '[' + prop.items.type + ']'
             typeLink()
-            switch (prop.items.type) {
-              case 'object':
-                // array of nested objects
-                // recursive call
-                // pass dot notation param with [] indicating array
-                childDotNotation += '[].'
-                objectContent = gen(prop.items, childDotNotation)
-                break
+            if (prop.items.type === 'object') {
+              // array of nested objects
+              // recursive call
+              // pass dot notation param with [] indicating array
+              childDotNotation += '[].'
+              objectContent = gen(prop.items, childDotNotation)
+            } else {
+              // array of numbers or strings
+              // simulate an object schema with properties
+              var obj = {
+                'properties': {
+                  '[]': prop.items
+                }
+              }
+              // recursive call
+              objectContent = gen(obj, childDotNotation)
             }
             addSpec('Min elements', prop.minItems)
             addSpec('Max elements', prop.maxItems)
@@ -203,7 +211,7 @@ window.twbschema = (function () {
                   '<div class="pb-3 px-3' + rowBgClass + '">' +
                     '<a class="small" data-toggle="collapse" href="#' + id + '" ' +
                     'aria-expanded="false" aria-controls="' + id + '">' +
-                      'Close<samp> ' + childDotNotation + '*</samp>' +
+                      'Close<samp> ' + childDotNotation + '</samp>' +
                     '</a>' +
                   '</div>' +
                 '</div>'
