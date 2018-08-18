@@ -18,7 +18,7 @@ To work properly, it requires (and does not include)
 Include minified script via CDN:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/twbschema/dist/twbschema.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/twbschema@1/dist/twbschema.min.js"></script>
 ```
 
 Or install [npm package](https://www.npmjs.com/package/twbschema):
