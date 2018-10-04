@@ -133,11 +133,15 @@ window.twbschema = (function () {
 
         // try to handle specs for each field type
         switch (type) {
-          case 'integer':
           case 'number':
             addSpec('Minimun', prop.minimum)
             addSpec('Maximum', prop.maximum)
             addSpec('Max precision', prop.multipleOf)
+            break
+
+          case 'integer':
+            addSpec('Minimun', prop.min)
+            addSpec('Maximum', prop.max)
             break
 
           case 'string':
