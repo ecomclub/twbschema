@@ -33,6 +33,8 @@ window.twbschema = (function () {
     var req = json.required
     // merge all object properties
     var props = Object.assign({}, json.properties, json.patternProperties)
+    // handle schema definitions
+    var defs = json.definitions
 
     // check each object property
     // first row without border
@@ -58,6 +60,16 @@ window.twbschema = (function () {
         }
 
         var prop = props[field]
+        if (!prop.hasOwnProperty('type')) {
+          // try schema definitions
+          if (defs && typeof prop.$ref === 'string') {
+            var model = prop.$ref.replace('#/definitions/', '')
+            if (defs.hasOwnProperty(model)) {
+              // merge definition model to prop object
+              Object.assign(prop, defs[model])
+            }
+          }
+        }
         var type = prop.type
         if (Array.isArray(type)) {
           // use first (most important ?) type
