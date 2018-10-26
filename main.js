@@ -13,6 +13,8 @@ window.twbschema = (function () {
   var counter = 0
   // control row colors
   var rowBgClass = ''
+  // handle schema definitions
+  var defs
 
   var gen = function (json, dotNotation) {
     var i
@@ -25,6 +27,10 @@ window.twbschema = (function () {
     if (!dotNotation) {
       root = true
       dotNotation = ''
+      // check definitions on root object
+      if (json.definitions) {
+        defs = json.definitions
+      }
     }
 
     // start treating schema
@@ -33,8 +39,6 @@ window.twbschema = (function () {
     var req = json.required
     // merge all object properties
     var props = Object.assign({}, json.properties, json.patternProperties)
-    // handle schema definitions
-    var defs = json.definitions
 
     // check each object property
     // first row without border
@@ -66,7 +70,7 @@ window.twbschema = (function () {
             var model = prop.$ref.replace('#/definitions/', '')
             if (defs.hasOwnProperty(model)) {
               // merge definition model to prop object
-              Object.assign(prop, defs[model])
+              prop = Object.assign({}, defs[model], prop)
             }
           }
         }
